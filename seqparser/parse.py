@@ -1,3 +1,6 @@
+# BMI 203 Winter 2022
+# Carolyn Ku
+
 import io
 from typing import Tuple, Union
 
@@ -96,8 +99,11 @@ class Parser:
             # and implement an exception for the error you will find in
             # the error message you receive. 
             while True:
-                rec = self.get_record(f_obj)
-                yield rec
+                try:
+                	rec = self.get_record(f_obj)
+                	yield rec
+                except:
+                	break
 
     def _get_record(self, f_obj: io.TextIOWrapper) -> Union[Tuple[str, str], Tuple[str, str, str]]:
         """
@@ -117,6 +123,9 @@ class FastaParser(Parser):
         """
         returns the next fasta record
         """
+        header = next(f_obj).strip()
+        seq = next(f_obj).strip()
+        return((header,seq))
 
 
 class FastqParser(Parser):
@@ -127,4 +136,18 @@ class FastqParser(Parser):
         """
         returns the next fastq record
         """
+        header = next(f_obj).strip()
+        seq = next(f_obj).strip()
+        plus = next(f_obj).strip()
+        qscore = next(f_obj).strip()
+        return((header, seq, qscore))
 
+""" 
+test_fastaparse = FastaParser("./data/small_test.fa")
+for r in test_fastaparse:
+	print(r)
+
+test_fastqparse = FastqParser("./data/small_test.fq")
+for r in test_fastqparse:
+	print(r)
+"""
